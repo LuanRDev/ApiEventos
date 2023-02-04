@@ -1,0 +1,96 @@
+trigger:
+  branches:
+    include:
+      - main
+      - dev
+variables:
+- group: BuildVariables
+- group: SupabaseVariables
+- group: ConnectionStringsVariables
+- name: dockerfilePath
+  value: '**/Dockerfile'
+
+- ${{if eq( variables['Build.SourceBranchName'], 'main' ) }}:
+  - name: Supabase.UrlStorage
+    value: $(UrlStorage)
+  - name: Supabase.UrlBase
+    value: $(UrlBase)
+  - name: Supabase.ApiKey
+    value: $(ApiKey)
+  - name: Supabase.AnonToken
+    value: $(AnonToken)
+  - name: ConnectionStrings.LPDBConnectionString
+    value: $(LPDBConnectionString)
+
+- ${{if eq( variables['Build.SourceBranchName'], 'dev' ) }}:
+  - name: Supabase.UrlStorage
+    value: $(UrlStorage)
+  - name: Supabase.UrlBase
+    value: $(UrlBase)
+  - name: Supabase.ApiKey
+    value: $(ApiKey)
+  - name: Supabase.AnonToken
+    value: $(AnonToken)
+  - name: ConnectionStrings.LPDBConnectionString
+    value: $(LPDBConnectionString)
+
+jobs:
+- job: Build
+  pool:
+    name: $(BuildPoolName)
+  steps:
+    - task: UseDotNet@2
+      displayName: Using .NET 7.0
+      inputs:
+        packageType: 'sdk'
+        version: '7.0.x'
+        includePreviewVersions: true
+    
+    - task: DotNetCoreCLI@2
+      displayName: Restoring packages
+      inputs: 
+        command: restore
+        projects: '**/*.csproj'
+    
+    - task: DotNetCoreCLI@2
+      displayName: Building Solution
+      inputs:
+        command: build
+        projects: '**/*.csproj'
+
+    - task: DotNetCoreCLI@2
+      displayName: Running tests
+      inputs:
+        command: test
+        projects: '**/*[Tt]est*.csproj'
+        publishTestResults: true
+    
+    - task: DotNetCoreCLI@2
+      displayName: Running publish
+      inputs:
+        command: 'publish'
+        publishWebProjects: true
+        zipAfterPublish: False
+        arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory)'
+
+    - task: FileTransform@1
+      inputs:
+        folderPath: '$(build.artifactstagingdirectory)/ApiEventos.WebApi/'
+        fileType: 'json'
+        targetFiles: 'appsettings.json'
+
+    - task: CopyFiles@2
+      displayName: Copying Dockerfiles
+      inputs:
+        SourceFolder: '$(System.DefaultWorkingDirectory)/src/ApiEventos.WebApi/'
+        Contents: '[Dd]ocker*'
+        TargetFolder: '$(build.artifactstagingdirectory)/ApiEventos.WebApi'
+    
+    - task: PublishBuildArtifacts@1
+      displayName: Publish artifacts
+      inputs:
+        PathtoPublish: '$(build.artifactstagingdirectory)'
+        ArtifactName: 'drop'
+        publishLocation: 'Container'
+
+      
