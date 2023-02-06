@@ -51,7 +51,10 @@ namespace ApiEventos.WebApi.Controllers
         {
             var mapper = InitializeAutomapper();
             var entity = mapper.Map<Evento>(newEvento);
-            _eventoService.Save(newEvento.TipoEvento, newEvento.Descricao, newEvento.Empresa, newEvento.Instrutor, newEvento.DataRealizado, newEvento.CargaHoraria, newEvento.ParticipantesEsperados, newEvento.UrlConteudo);
+            _eventoService.Save(newEvento.TipoEvento, newEvento.Descricao, newEvento.Empresa, newEvento.Instrutor, newEvento.DataRealizado, newEvento.CargaHoraria, newEvento.ParticipantesEsperados, newEvento.ParticipacoesConfirmadas, newEvento.Inativo);
+            _unitOfWork.Commit();
+            var createdEvento = _eventoRepository.GetLastEntity();
+            _eventoService.SaveFiles(newEvento.ArquivosBase64, newEvento.Empresa, createdEvento.Id);
             _unitOfWork.Commit();
             return Ok();
         }
@@ -64,7 +67,7 @@ namespace ApiEventos.WebApi.Controllers
             var evento = _eventoRepository.GetById(editEvento.Id);
             if(evento == null)
                 return NotFound(new { message = $"Evento com o id {entity.Id} não foi encontrado." });
-            _eventoService.Update(editEvento.TipoEvento, editEvento.Descricao, editEvento.Empresa, editEvento.Instrutor, editEvento.DataRealizado, editEvento.CargaHoraria, editEvento.ParticipantesEsperados, editEvento.UrlConteudo);
+            _eventoService.Update(editEvento.Id, editEvento.TipoEvento, editEvento.Descricao, editEvento.Empresa, editEvento.Instrutor, editEvento.DataRealizado, editEvento.CargaHoraria, editEvento.ParticipantesEsperados, editEvento.ParticipacoesConfirmadas, editEvento.Inativo);
             _unitOfWork.Commit();
             return Ok();
         }
