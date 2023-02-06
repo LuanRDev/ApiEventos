@@ -15,6 +15,14 @@ namespace ApiEventos.Infra.Repositories
             return null;
         }
 
+        public override Evento GetLastEntity()
+        {
+            var query = _context.Set<Evento>().OrderByDescending(e => e.Id);
+            if (query.Any())
+                return query.FirstOrDefault();
+            return null;
+        }
+
         public override IEnumerable<Evento> GetAll()
         {
             var query = _context.Set<Evento>();

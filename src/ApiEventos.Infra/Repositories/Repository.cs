@@ -18,6 +18,14 @@ namespace ApiEventos.Infra.Repositories
             return null;
         }
 
+        public virtual TEntity GetLastEntity()
+        {
+            var query = _context.Set<TEntity>().OrderByDescending(e => e.Id);
+            if (query.Any())
+                return query.FirstOrDefault();
+            return null;
+        }
+
         public virtual IEnumerable<TEntity> GetAll()
         {
             var query = _context.Set<TEntity>();
