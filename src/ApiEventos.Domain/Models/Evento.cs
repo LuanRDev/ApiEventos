@@ -9,13 +9,14 @@
         public DateTime DataRealizado { get; private set; }
         public float CargaHoraria { get; private set; }
         public int ParticipantesEsperados { get; private set; }
-        public string? UrlConteudo { get; private set; }
+        public int ParticipacoesConfirmadas { get; private set; }
+        public bool Inativo { get; private set; }
 
         public Evento() { }
 
-        public Evento(int? tipoEvento, string? descricao, string? empresa, string? instrutor, DateTime dataRealizado, float cargaHoraria, int participantesEsperados, string? urlConteudo)
+        public Evento(int? tipoEvento, string? descricao, string? empresa, string? instrutor, DateTime dataRealizado, float cargaHoraria, int participantesEsperados, int participacoesConfirmadas, bool inativo)
         {
-            ValidaEvento(tipoEvento, descricao, empresa, instrutor, dataRealizado, cargaHoraria, participantesEsperados, urlConteudo);
+            ValidaEvento(tipoEvento, descricao, empresa, instrutor, dataRealizado, cargaHoraria, participantesEsperados, participacoesConfirmadas, inativo);
             TipoEvento = tipoEvento;
             Descricao = descricao;
             Empresa = empresa;
@@ -23,10 +24,11 @@
             DataRealizado = dataRealizado;
             CargaHoraria = cargaHoraria;
             ParticipantesEsperados = participantesEsperados;
-            UrlConteudo = urlConteudo;
+            ParticipacoesConfirmadas = participacoesConfirmadas;
+            Inativo = inativo;
         }
 
-        private void ValidaEvento(int? tipoEvento, string? descricao, string? empresa, string? instrutor, DateTime dataRealizado, float cargaHoraria, int? participantesEsperados, string? urlConteudo)
+        private void ValidaEvento(int? tipoEvento, string? descricao, string? empresa, string? instrutor, DateTime dataRealizado, float cargaHoraria, int? participantesEsperados, int? participacoesConfirmadas, bool? inativo)
         {
             if (string.IsNullOrEmpty(empresa))
             {
@@ -40,17 +42,17 @@
             {
                 throw new InvalidOperationException("O campo Instrutor não pode ser vazio ou nulo");
             }
-            if (string.IsNullOrEmpty(urlConteudo))
-            {
-                throw new InvalidOperationException("O campo UrlConteudo não pode ser vazio ou nulo");
-            }
             if (tipoEvento == null) 
             {
                 throw new InvalidOperationException("O campo TipoEvento não pode ser vazio ou nulo");
             }
             if (participantesEsperados == null)
             {
-                throw new InvalidOperationException("O campo TipoEvento não pode ser vazio ou nulo");
+                throw new InvalidOperationException("O campo ParticipantesEsperados não pode ser vazio ou nulo");
+            }
+            if (participacoesConfirmadas == null)
+            {
+                throw new InvalidOperationException("O campo ParticipacoesConfirmadas não pode ser vazio ou nulo");
             }
             if (dataRealizado == null)
             {
@@ -59,6 +61,10 @@
             if(cargaHoraria == null)
             {
                 throw new InvalidOperationException("O campo CargaHoraria não pode ser vazio ou nulo");
+            }
+            if(inativo == null)
+            {
+                throw new InvalidOperationException("O campo Inativo não pode ser vazio ou nulo");
             }
         }
     }
