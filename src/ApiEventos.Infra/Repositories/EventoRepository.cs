@@ -1,5 +1,6 @@
 ﻿using ApiEventos.Domain.Models;
 using ApiEventos.Infra.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace ApiEventos.Infra.Repositories
 {
@@ -9,7 +10,7 @@ namespace ApiEventos.Infra.Repositories
 
         public override Evento GetById(int id)
         {
-            var query = _context.Set<Evento>().Where(e => e.Id == id);
+            var query = _context.Set<Evento>().Where(e => e.Id == id).Include(e => e.ConteudoEventos);
             if(query.Any())
                 return query.FirstOrDefault();
             return null;
