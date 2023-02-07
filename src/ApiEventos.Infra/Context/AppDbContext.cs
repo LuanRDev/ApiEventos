@@ -6,7 +6,7 @@ namespace ApiEventos.Infra.Context
     public class AppDbContext : DbContext
     {
         public DbSet<Evento> Eventos { get; set; }
-        public DbSet<StorageFile> StorageFiles { get; set; }
+        public DbSet<DatabaseFile> StorageFiles { get; set; }
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -29,15 +29,20 @@ namespace ApiEventos.Infra.Context
                 entity.Property(e => e.TipoEvento).HasColumnName("tipo_evento");
             });
 
-            modelBuilder.Entity<StorageFile>(entity =>
+            modelBuilder.Entity<DatabaseFile>(entity =>
             {
                 entity.HasKey(e => e.Id).HasName("conteudo_eventos_pkey");
 
                 entity.ToTable("conteudo_eventos");
 
+                entity.Property(e => e.Id).HasColumnName("codigo_conteudo");
                 entity.Property(e => e.CodigoEvento).HasColumnName("codigo_evento");
-                entity.Property(e => e.Url).HasColumnName("url_conteudo");
                 entity.Property(e => e.Name).HasColumnName("nome_conteudo");
+                entity.Property(e => e.Url).HasColumnName("url_conteudo");
+
+                entity.HasOne(d => d.CodigoEventoNavigation).WithMany(p => p.ConteudoEventos)
+                    .HasForeignKey(d => d.CodigoEvento)
+                    .HasConstraintName("conteudo_eventos_codigo_evento_fkey");
             });
         }
     }

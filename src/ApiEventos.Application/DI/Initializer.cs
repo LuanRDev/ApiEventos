@@ -14,7 +14,10 @@ namespace ApiEventos.Application.DI
             services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connection));
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped(typeof(IRepository<Evento>), typeof(Repository<Evento>));
+            services.AddScoped(typeof(IRepository<DatabaseFile>), typeof(Repository<DatabaseFile>));
             services.AddScoped(typeof(EventoService));
+            services.AddScoped(typeof(EventoRepository));
+            services.AddScoped(typeof(DatabaseFileService));
             services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
         }
     }

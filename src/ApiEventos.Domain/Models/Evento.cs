@@ -11,6 +11,7 @@
         public int ParticipantesEsperados { get; private set; }
         public int ParticipacoesConfirmadas { get; private set; }
         public bool Inativo { get; private set; }
+        public virtual ICollection<DatabaseFile> ConteudoEventos { get; set; } = new List<DatabaseFile>();
 
         public Evento() { }
 
