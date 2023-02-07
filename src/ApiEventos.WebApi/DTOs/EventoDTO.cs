@@ -4,7 +4,7 @@ namespace ApiEventos.WebApi.DTOs
 {
     public class EventoDTO
     {
-        public int Id { get; private set; }
+        public int Id { get; set; }
         public int TipoEvento { get; set; }
         public string? Descricao { get; set; }
         public string Empresa { get; set; }
