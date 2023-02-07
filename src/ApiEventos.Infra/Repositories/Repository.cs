@@ -34,12 +34,12 @@ namespace ApiEventos.Infra.Repositories
             return new List<TEntity>();
         }
 
-        public virtual void Save(TEntity entity)
+        public virtual async Task Save(TEntity entity)
         {
-            _context.Set<TEntity>().Add(entity);
+           _context.Set<TEntity>().Add(entity);
         }
 
-        public virtual void Update(TEntity entity)
+        public virtual async Task Update(TEntity entity)
         {
             var query = _context.Set<TEntity>().Where(e => e.Id == entity.Id);
             if (query.Any())
@@ -49,7 +49,7 @@ namespace ApiEventos.Infra.Repositories
             }
         }
 
-        public virtual void Delete(int id)
+        public virtual async Task Delete(int id)
         {
             var query = _context.Set<TEntity>().Where(e => e.Id == id);
             if(query.Any())
