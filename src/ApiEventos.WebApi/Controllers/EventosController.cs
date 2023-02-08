@@ -49,7 +49,7 @@ namespace ApiEventos.WebApi.Controllers
         [HttpGet()]
         public async Task<ActionResult<IEnumerable<Evento>>> GetEventos()
         {
-            var eventos = _eventoRepository.GetAll();
+            var eventos = _repo.GetAll();
             return Ok(eventos);
         }
 
@@ -75,6 +75,17 @@ namespace ApiEventos.WebApi.Controllers
             if(evento == null)
                 return NotFound(new { message = $"Evento com o id {entity.Id} não foi encontrado." });
             await _eventoService.Update(editEvento.Id, editEvento.TipoEvento, editEvento.Descricao, editEvento.Empresa, editEvento.Instrutor, editEvento.DataRealizado, editEvento.CargaHoraria, editEvento.ParticipantesEsperados, editEvento.ParticipacoesConfirmadas, editEvento.Inativo);
+            _unitOfWork.Commit();
+            return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteEvento(int id)
+        {
+            var evento = _eventoRepository.GetById(id);
+            if (evento == null)
+                return NotFound(new { message = $"Evento com o id {id} não foi encontrado." });
+            await _eventoService.Delete(id);
             _unitOfWork.Commit();
             return Ok();
         }
