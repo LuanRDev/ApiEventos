@@ -6,16 +6,16 @@
         public string? Descricao { get; private set; }
         public string? Empresa { get; private set; }
         public string? Instrutor { get; private set; }
-        public DateTime DataRealizado { get; private set; }
-        public float CargaHoraria { get; private set; }
-        public int ParticipantesEsperados { get; private set; }
-        public int ParticipacoesConfirmadas { get; private set; }
-        public bool Inativo { get; private set; }
+        public DateTime? DataRealizado { get; private set; }
+        public float? CargaHoraria { get; private set; }
+        public int? ParticipantesEsperados { get; private set; }
+        public int? ParticipacoesConfirmadas { get; private set; }
+        public bool? Inativo { get; private set; }
         public virtual ICollection<DatabaseFile> ConteudoEventos { get; set; } = new List<DatabaseFile>();
 
         public Evento() { }
 
-        public Evento(int? tipoEvento, string? descricao, string? empresa, string? instrutor, DateTime dataRealizado, float cargaHoraria, int participantesEsperados, int participacoesConfirmadas, bool inativo)
+        public Evento(int? tipoEvento, string? descricao, string? empresa, string? instrutor, DateTime? dataRealizado, float? cargaHoraria, int? participantesEsperados, int? participacoesConfirmadas, bool? inativo)
         {
             ValidaEvento(tipoEvento, descricao, empresa, instrutor, dataRealizado, cargaHoraria, participantesEsperados, participacoesConfirmadas, inativo);
             TipoEvento = tipoEvento;
@@ -28,8 +28,48 @@
             ParticipacoesConfirmadas = participacoesConfirmadas;
             Inativo = inativo;
         }
+        
+        public void UpdateEvento(int? tipoEvento, string? descricao, string? empresa, string? instrutor, DateTime? dataRealizado, float? cargaHoraria, int? participantesEsperados, int? participacoesConfirmadas, bool? inativo)
+        {
+            if (tipoEvento != null)
+            {
+                TipoEvento = tipoEvento;
+            }
+            if (cargaHoraria != null)
+            {
+                CargaHoraria = cargaHoraria;
+            }
+            if(participantesEsperados != null)
+            {
+                ParticipantesEsperados = participantesEsperados;
+            }
+            if(participacoesConfirmadas != null)
+            {
+                ParticipacoesConfirmadas = participacoesConfirmadas;
+            }
+            if (dataRealizado != null)
+            {
+                DataRealizado = dataRealizado;
+            }
+            if(inativo != null)
+            {
+                Inativo = inativo;
+            }
+            if (!string.IsNullOrEmpty(descricao))
+            {
+                Descricao = descricao;
+            }
+            if (!string.IsNullOrEmpty(empresa))
+            {
+                Empresa = empresa;
+            }
+            if (!string.IsNullOrEmpty(instrutor))
+            {
+                Instrutor = instrutor;
+            }
+        }
 
-        private void ValidaEvento(int? tipoEvento, string? descricao, string? empresa, string? instrutor, DateTime dataRealizado, float cargaHoraria, int? participantesEsperados, int? participacoesConfirmadas, bool? inativo)
+        private void ValidaEvento(int? tipoEvento, string? descricao, string? empresa, string? instrutor, DateTime? dataRealizado, float? cargaHoraria, int? participantesEsperados, int? participacoesConfirmadas, bool? inativo)
         {
             if (string.IsNullOrEmpty(empresa))
             {
