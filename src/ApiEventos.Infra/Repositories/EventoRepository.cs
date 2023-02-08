@@ -10,7 +10,7 @@ namespace ApiEventos.Infra.Repositories
 
         public override Evento GetById(int id)
         {
-            var query = _context.Set<Evento>().Where(e => e.Id == id).Include(e => e.ConteudoEventos);
+            var query = _context.Set<Evento>().Where(e => e.Id == id).Where(e => e.Inativo == false).Include(e => e.ConteudoEventos);
             if(query.Any())
                 return query.FirstOrDefault();
             return null;
@@ -18,7 +18,7 @@ namespace ApiEventos.Infra.Repositories
 
         public override Evento GetLastEntity()
         {
-            var query = _context.Set<Evento>().OrderByDescending(e => e.Id);
+            var query = _context.Set<Evento>().Where(e => e.Inativo == false).OrderByDescending(e => e.Id);
             if (query.Any())
                 return query.FirstOrDefault();
             return null;
@@ -26,7 +26,7 @@ namespace ApiEventos.Infra.Repositories
 
         public override IEnumerable<Evento> GetAll()
         {
-            var query = _context.Set<Evento>();
+            var query = _context.Set<Evento>().Where(e => e.Inativo == false).Include(e => e.ConteudoEventos);
             if(query.Any())
                 return query.ToList();
             return new List<Evento>();
