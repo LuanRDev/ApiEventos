@@ -19,7 +19,7 @@ variables:
     value: $(ApiKey)
   - name: Supabase.AnonToken
     value: $(AnonToken)
-  - name: ConnectionStrings.LPDBConnectionString
+  - name: ConnectionStrings.DefaultConnectionString
     value: $(LPDBConnectionString)
 
 - ${{if eq( variables['Build.SourceBranchName'], 'dev' ) }}:
@@ -31,7 +31,7 @@ variables:
     value: $(ApiKey)
   - name: Supabase.AnonToken
     value: $(AnonToken)
-  - name: ConnectionStrings.LPDBConnectionString
+  - name: ConnectionStrings.DefaultConnectionString
     value: $(LPDBConnectionString)
 
 jobs:
