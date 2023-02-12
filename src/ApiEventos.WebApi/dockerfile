@@ -1,6 +1,23 @@
-FROM mcr.microsoft.com/dotnet/aspnet:7.0
-WORKDIR /App
-COPY . .
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+WORKDIR /app
 EXPOSE 80
 EXPOSE 443
+
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+WORKDIR /src
+COPY ["src/ApiEventos.WebApi/ApiEventos.WebApi.csproj", "src/ApiEventos.WebApi/"]
+COPY ["src/ApiEventos.Application/ApiEventos.Application.csproj", "src/ApiEventos.Application/"]
+COPY ["src/ApiEventos.Infra/ApiEventos.Infra.csproj", "src/ApiEventos.Infra/"]
+COPY ["src/ApiEventos.Domain/ApiEventos.Domain.csproj", "src/ApiEventos.Domain/"]
+RUN dotnet restore "src/ApiEventos.WebApi/ApiEventos.WebApi.csproj"
+COPY . .
+WORKDIR "/src/src/ApiEventos.WebApi"
+RUN dotnet build "ApiEventos.WebApi.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "ApiEventos.WebApi.csproj" -c Release -o /app/publish /p:UseAppHost=false
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "ApiEventos.WebApi.dll"]
