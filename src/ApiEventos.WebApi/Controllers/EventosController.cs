@@ -47,8 +47,13 @@ namespace ApiEventos.WebApi.Controllers
         }
 
         [HttpGet()]
-        public async Task<ActionResult<IEnumerable<Evento>>> GetEventos()
+        public async Task<ActionResult<IEnumerable<Evento>>> GetEventos(int limit)
         {
+            if(limit > 0)
+            {
+                var eventosLimit = _repo.GetLimit(limit);
+                return Ok(eventosLimit);
+            }
             var eventos = _repo.GetAll();
             return Ok(eventos);
         }

@@ -24,6 +24,14 @@ namespace ApiEventos.Infra.Repositories
             return null;
         }
 
+        public override IEnumerable<Evento> GetLimit(int limit)
+        {
+            var query = _context.Set<Evento>().Take(limit);
+            if (query.Any())
+                return query.ToList();
+            return new List<Evento>();
+        }
+
         public override IEnumerable<Evento> GetAll()
         {
             var query = _context.Set<Evento>().Where(e => e.Inativo == false).Include(e => e.ConteudoEventos);

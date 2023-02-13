@@ -26,6 +26,14 @@ namespace ApiEventos.Infra.Repositories
             return null;
         }
 
+        public virtual IEnumerable<TEntity> GetLimit(int limit)
+        {
+            var query = _context.Set<TEntity>().Take(limit);
+            if (query.Any())
+                return query.ToList();
+            return null;
+        }
+
         public virtual IEnumerable<TEntity> GetAll()
         {
             var query = _context.Set<TEntity>();
