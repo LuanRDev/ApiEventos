@@ -1,5 +1,4 @@
 ﻿using ApiEventos.Domain.Interfaces;
-using Microsoft.Extensions.Configuration;
 
 namespace ApiEventos.Domain.Models
 {
