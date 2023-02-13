@@ -44,6 +44,17 @@ namespace ApiEventos.Infra.Context
                     .HasForeignKey(d => d.CodigoEvento)
                     .HasConstraintName("conteudo_eventos_codigo_evento_fkey");
             });
+
+
+            modelBuilder.Entity<TipoEvento>(entity =>
+            {
+                entity.HasKey(e => e.Id).HasName("eventos_tipos_pkey");
+
+                entity.ToTable("eventos_tipos");
+
+                entity.Property(e => e.Id).HasColumnName("tipo_codigo");
+                entity.Property(e => e.TipoDescricao).HasColumnName("tipo_descricao");
+            });
         }
     }
 }

@@ -13,15 +13,20 @@ namespace ApiEventos.WebApi.Controllers
         private readonly EventoRepository _repo;
         private readonly DatabaseFileService _databaseFileService;
         private readonly IRepository<Evento> _eventoRepository;
-        private readonly IRepository<DatabaseFile> _databaseFileRepository;
+        private readonly IRepository<TipoEvento> _tiposEventoRepository;
         private readonly IUnitOfWork _unitOfWork;
-        public EventosController(EventoRepository repo, EventoService eventoService, DatabaseFileService databaseFileService, IRepository<Evento> eventoRepository, IRepository<DatabaseFile> databaseFileRepository, IUnitOfWork unitOfWork) 
+        public EventosController(EventoRepository repo, 
+            EventoService eventoService, 
+            DatabaseFileService databaseFileService, 
+            IRepository<Evento> eventoRepository, 
+            IRepository<TipoEvento> tiposEventoRepository, 
+            IUnitOfWork unitOfWork) 
         {
             _repo = repo;
             _eventoService = eventoService;
             _databaseFileService = databaseFileService;
             _eventoRepository = eventoRepository;
-            _databaseFileRepository = databaseFileRepository;
+            _tiposEventoRepository = tiposEventoRepository;
             _unitOfWork = unitOfWork;
         }
 
@@ -56,6 +61,13 @@ namespace ApiEventos.WebApi.Controllers
             }
             var eventos = _repo.GetAll();
             return Ok(eventos);
+        }
+
+        [HttpGet("tipos")]
+        public async Task<ActionResult<IEnumerable<TipoEvento>>> GetTipos()
+        {
+            var tipos = _tiposEventoRepository.GetAll();
+            return Ok(tipos);
         }
 
         [HttpPost()]
