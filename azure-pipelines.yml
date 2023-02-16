@@ -7,6 +7,7 @@ variables:
 - group: BuildVariables
 - group: SupabaseVariables
 - group: ConnectionStringsVariables
+- group: APIsUrlsVariables
 - name: dockerfilePath
   value: '**/Dockerfile'
 
@@ -19,8 +20,10 @@ variables:
     value: $(ApiKey)
   - name: Supabase.AnonToken
     value: $(AnonToken)
-  - name: ConnectionStrings.DefaultConnectionString
+  - name: ConnectionStrings.LPDBConnectionString
     value: $(LPDBConnectionString)
+  - name: ApiStorageManager.BaseUrl
+    value: $(ApiStorageManagerBaseAddress)
 
 - ${{if eq( variables['Build.SourceBranchName'], 'dev' ) }}:
   - name: Supabase.UrlStorage
@@ -31,8 +34,10 @@ variables:
     value: $(ApiKey)
   - name: Supabase.AnonToken
     value: $(AnonToken)
-  - name: ConnectionStrings.DefaultConnectionString
+  - name: ConnectionStrings.LPDBConnectionString
     value: $(LPDBConnectionString)
+  - name: ApiStorageManager.BaseUrl
+    value: $(ApiStorageManagerBaseAddress)
 
 jobs:
 - job: Build
