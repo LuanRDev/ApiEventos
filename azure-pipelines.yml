@@ -20,7 +20,7 @@ variables:
     value: $(ApiKey)
   - name: Supabase.AnonToken
     value: $(AnonToken)
-  - name: ConnectionStrings.LPDBConnectionString
+  - name: ConnectionStrings.DefaultConnectionString
     value: $(LPDBConnectionString)
   - name: ApiStorageManager.BaseUrl
     value: $(ApiStorageManagerBaseAddress)
@@ -34,7 +34,7 @@ variables:
     value: $(ApiKey)
   - name: Supabase.AnonToken
     value: $(AnonToken)
-  - name: ConnectionStrings.LPDBConnectionString
+  - name: ConnectionStrings.DefaultConnectionString
     value: $(LPDBConnectionString)
   - name: ApiStorageManager.BaseUrl
     value: $(ApiStorageManagerBaseAddress)
