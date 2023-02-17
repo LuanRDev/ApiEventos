@@ -77,9 +77,12 @@ namespace ApiEventos.WebApi.Controllers
             var entity = mapper.Map<Evento>(newEvento);
             await _eventoService.Save(newEvento.TipoEvento, newEvento.Descricao, newEvento.Empresa, newEvento.Instrutor, newEvento.DataRealizado, newEvento.CargaHoraria, newEvento.ParticipantesEsperados, newEvento.ParticipacoesConfirmadas, newEvento.Inativo);
             _unitOfWork.Commit();
-            var createdEvento = _eventoRepository.GetLastEntity();
-            await _databaseFileService.Save(createdEvento.Id, newEvento.Empresa, newEvento.ArquivosBase64);
-            _unitOfWork.Commit();
+            if (newEvento.ArquivosBase64 != null)
+            {
+                var createdEvento = _eventoRepository.GetLastEntity();
+                await _databaseFileService.Save(createdEvento.Id, newEvento.Empresa, newEvento.ArquivosBase64);
+                _unitOfWork.Commit();
+            }
             return Ok();
         }
 
@@ -93,6 +96,16 @@ namespace ApiEventos.WebApi.Controllers
                 return NotFound(new { message = $"Evento com o id {entity.Id} não foi encontrado." });
             await _eventoService.Update(editEvento.Id, editEvento.TipoEvento, editEvento.Descricao, editEvento.Empresa, editEvento.Instrutor, editEvento.DataRealizado, editEvento.CargaHoraria, editEvento.ParticipantesEsperados, editEvento.ParticipacoesConfirmadas, editEvento.Inativo);
             _unitOfWork.Commit();
+            if (editEvento.ArquivosBase64 != null)
+            {
+                if (evento.Empresa == null)
+                {
+                    return BadRequest(new { message = $"Empresa informada é inválida" });
+                }
+                await _databaseFileService.Save(evento.Id, evento.Empresa, editEvento.ArquivosBase64);
+                _unitOfWork.Commit();
+            }
+                
             return Ok();
         }
 
