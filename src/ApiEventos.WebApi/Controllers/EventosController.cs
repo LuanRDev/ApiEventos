@@ -70,6 +70,24 @@ namespace ApiEventos.WebApi.Controllers
             return Ok(tipos);
         }
 
+        [HttpGet("reports")]
+        public async Task<ActionResult<IEnumerable<IEnumerable<Evento>>>> GetReports()
+        {
+            List<IEnumerable<Evento>> eventosReports = new List<IEnumerable<Evento>>();
+            DateTime lastWeekDate = DateTime.Today.AddDays(-7);
+            var lastWeek = _eventoRepository.GetDate(lastWeekDate, DateTime.Today);
+            eventosReports.Add(lastWeek);
+
+            DateTime lastMonthDate = DateTime.Today.AddDays(-30);
+            var lastMonth = _eventoRepository.GetDate(lastMonthDate, DateTime.Today);
+            eventosReports.Add(lastMonth);
+
+            DateTime lastTrimesterDate = DateTime.Today.AddDays(-90);
+            var lastTrimester = _eventoRepository.GetDate(lastTrimesterDate, DateTime.Today);
+            eventosReports.Add(lastTrimester);
+            return Ok(eventosReports.AsEnumerable());
+        }
+
         [HttpPost()]
         public async Task<ActionResult> NewEvento([FromBody]EventoDTO newEvento)
         {
