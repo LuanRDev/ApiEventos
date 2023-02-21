@@ -10,19 +10,16 @@ namespace ApiEventos.WebApi.Controllers
     public class EventosController : EventosControllerBase
     {
         private readonly EventoService _eventoService;
-        private readonly EventoRepository _repo;
+        private readonly EventoRepository _eventoRepository;
         private readonly DatabaseFileService _databaseFileService;
-        private readonly IRepository<Evento> _eventoRepository;
         private readonly IRepository<TipoEvento> _tiposEventoRepository;
         private readonly IUnitOfWork _unitOfWork;
-        public EventosController(EventoRepository repo, 
+        public EventosController(EventoRepository eventoRepository, 
             EventoService eventoService, 
-            DatabaseFileService databaseFileService, 
-            IRepository<Evento> eventoRepository, 
+            DatabaseFileService databaseFileService,
             IRepository<TipoEvento> tiposEventoRepository, 
             IUnitOfWork unitOfWork) 
         {
-            _repo = repo;
             _eventoService = eventoService;
             _databaseFileService = databaseFileService;
             _eventoRepository = eventoRepository;
@@ -43,7 +40,7 @@ namespace ApiEventos.WebApi.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Evento>> GetEvento(int id)
         {
-            var evento = _repo.GetById(id);
+            var evento = _eventoRepository.GetById(id);
             if(evento == null)
             {
                 return NotFound(new { message = $"Evento com o id {id} não foi encontrado." });
@@ -56,10 +53,10 @@ namespace ApiEventos.WebApi.Controllers
         {
             if(limit > 0)
             {
-                var eventosLimit = _repo.GetLimit(limit);
+                var eventosLimit = _eventoRepository.GetLimit(limit);
                 return Ok(eventosLimit);
             }
-            var eventos = _repo.GetAll();
+            var eventos = _eventoRepository.GetAll();
             return Ok(eventos);
         }
 
