@@ -60,31 +60,6 @@ namespace ApiEventos.WebApi.Controllers
             return Ok(eventos);
         }
 
-        [HttpGet("tipos")]
-        public async Task<ActionResult<IEnumerable<TipoEvento>>> GetTipos()
-        {
-            var tipos = _tiposEventoRepository.GetAll();
-            return Ok(tipos);
-        }
-
-        [HttpGet("reports")]
-        public async Task<ActionResult<IEnumerable<IEnumerable<Evento>>>> GetReports()
-        {
-            List<IEnumerable<Evento>> eventosReports = new List<IEnumerable<Evento>>();
-            DateTime lastWeekDate = DateTime.Today.AddDays(-7);
-            var lastWeek = _eventoRepository.GetDate(lastWeekDate, DateTime.Today);
-            eventosReports.Add(lastWeek);
-
-            DateTime lastMonthDate = DateTime.Today.AddDays(-30);
-            var lastMonth = _eventoRepository.GetDate(lastMonthDate, DateTime.Today);
-            eventosReports.Add(lastMonth);
-
-            DateTime lastTrimesterDate = DateTime.Today.AddDays(-90);
-            var lastTrimester = _eventoRepository.GetDate(lastTrimesterDate, DateTime.Today);
-            eventosReports.Add(lastTrimester);
-            return Ok(eventosReports.AsEnumerable());
-        }
-
         [HttpPost()]
         public async Task<ActionResult> NewEvento([FromBody]EventoDTO newEvento)
         {
@@ -133,6 +108,34 @@ namespace ApiEventos.WebApi.Controllers
             await _eventoService.Delete(id);
             _unitOfWork.Commit();
             return Ok();
+        }
+
+        [HttpGet("tipos")]
+        public async Task<ActionResult<IEnumerable<TipoEvento>>> GetTipos()
+        {
+            var tipos = _tiposEventoRepository.GetAll();
+            return Ok(tipos);
+        }
+
+        [HttpGet("reports")]
+        public async Task<ActionResult<object>> GetReports()
+        {
+            DateTime lastWeekDate = DateTime.Today.AddDays(-7);
+            var lastWeek = _eventoRepository.GetReports(lastWeekDate, DateTime.Today);
+
+            DateTime lastMonthDate = DateTime.Today.AddDays(-30);
+            var lastMonth = _eventoRepository.GetReports(lastMonthDate, DateTime.Today);
+
+            DateTime lastTrimesterDate = DateTime.Today.AddDays(-90);
+            var lastTrimester = _eventoRepository.GetReports(lastTrimesterDate, DateTime.Today);
+
+            object reports = new
+            {
+                UltimaSemana = lastWeek,
+                UltimoMes = lastMonth,
+                UltimoTrimestre = lastTrimester,
+            };
+            return Ok(reports);
         }
     }
 }

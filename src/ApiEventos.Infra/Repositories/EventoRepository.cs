@@ -65,5 +65,31 @@ namespace ApiEventos.Infra.Repositories
             }
             return new List<Evento>();
         }
+
+        public IEnumerable<int?> GetReports(DateTime? startDate, DateTime? endDate)
+        {
+            if (startDate == null && endDate.HasValue)
+            {
+                var query = _context.Set<Evento>().Where(e => e.Inativo == false).Where(e => e.DataRealizado < endDate).Select(e => e.ParticipacoesConfirmadas);
+                if (query.Any())
+                    return query.ToList();
+                return new List<int?>();
+            }
+            if (endDate == null && startDate.HasValue)
+            {
+                var query = _context.Set<Evento>().Where(e => e.Inativo == false).Where(e => e.DataRealizado > startDate).Select(e => e.ParticipacoesConfirmadas);
+                if (query.Any())
+                    return query.ToList();
+                return new List<int?>();
+            }
+            if (startDate.HasValue && endDate.HasValue)
+            {
+                var query = _context.Set<Evento>().Where(e => e.Inativo == false).Where(e => e.DataRealizado > startDate && e.DataRealizado < endDate).Select(e => e.ParticipacoesConfirmadas);
+                if (query.Any())
+                    return query.ToList();
+                return new List<int?>();
+            }
+            return new List<int?>();
+        }
     }
 }
