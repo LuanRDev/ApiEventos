@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace ApiEventos.WebApi.DTOs
+﻿namespace ApiEventos.WebApi.DTOs
 {
     public class EventoDTO
     {
@@ -12,8 +10,8 @@ namespace ApiEventos.WebApi.DTOs
         public DateTime? DataRealizado { get; set; }
         public float? CargaHoraria { get; set; }
         public int? ParticipantesEsperados { get; set; }
-        public int? ParticipacoesConfirmadas { get; set; }
-        public bool? Inativo { get; set; }
+        public int? ParticipacoesConfirmadas { get; set; } = 0;
+        public bool? Inativo { get; set; } = false;
         public IEnumerable<string>? ArquivosBase64 { get; set; }
     }
 }

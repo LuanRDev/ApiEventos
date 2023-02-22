@@ -62,10 +62,11 @@ namespace ApiEventos.WebApi.Controllers
 
         [HttpPost()]
         public async Task<ActionResult> NewEvento([FromBody]EventoDTO newEvento)
-        {
-            var mapper = InitializeAutomapper();
-            var entity = mapper.Map<Evento>(newEvento);
-            await _eventoService.Save(newEvento.TipoEvento, newEvento.Descricao, newEvento.Empresa, newEvento.Instrutor, newEvento.DataRealizado, newEvento.CargaHoraria, newEvento.ParticipantesEsperados, newEvento.ParticipacoesConfirmadas, newEvento.Inativo);
+        { 
+            await _eventoService.Save(
+                newEvento.TipoEvento, newEvento.Descricao, newEvento.Empresa, newEvento.Instrutor, 
+                newEvento.DataRealizado, newEvento.CargaHoraria, newEvento.ParticipantesEsperados, 
+                newEvento.ParticipacoesConfirmadas, newEvento.Inativo);
             _unitOfWork.Commit();
             if (newEvento.ArquivosBase64 != null)
             {
