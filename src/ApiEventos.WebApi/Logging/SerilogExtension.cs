@@ -22,7 +22,7 @@ public static class SerilogExtension
             .Enrich.WithCorrelationId()
             .Enrich.WithExceptionDetails()
             .Filter.ByExcluding(Matching.FromSource("Microsoft.AspNetCore.StaticFiles"))
-            .WriteTo.Async(writeTo => writeTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(configuration["ElasticConfiguration:Uri"]))
+            .WriteTo.Async(writeTo => writeTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(configuration["ElasticConfiguration:Uri"]!))
             {
                 TypeName = null,
                 AutoRegisterTemplate = true,

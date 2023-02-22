@@ -35,6 +35,12 @@ namespace ApiEventos.WebApi.Middlewares
                 Details = exception.Message,
                 TraceId = context.TraceIdentifier
             }.ToString());
+            Log.Error(new ErrorDetails()
+            {
+                Message = "Internal Server Error",
+                Details = exception.Message,
+                TraceId = context.TraceIdentifier
+            }.ToString());
         }
     }
 }
