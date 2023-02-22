@@ -49,7 +49,7 @@ namespace ApiEventos.Infra.Repositories
 
         public override IEnumerable<Evento> GetLimit(int limit)
         {
-            var query = _context.Set<Evento>().Where(e => e.Inativo == false).Take(limit);
+            var query = _context.Set<Evento>().Where(e => e.Inativo == false).Take(limit).OrderByDescending(e => e.Id);
             if (query.Any())
             {
                 foreach(var evento in query)
