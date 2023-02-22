@@ -77,11 +77,12 @@ namespace ApiEventos.WebApi.Controllers
             return Ok();
         }
 
-        [HttpPut()]
-        public async Task<ActionResult> EditEvento([FromBody] EventoDTO editEvento)
+        [HttpPut("{id}")]
+        public async Task<ActionResult> EditEvento([FromBody] EventoDTO editEvento, int id)
         {
             var mapper = InitializeAutomapper();
             var entity = mapper.Map<Evento>(editEvento);
+            editEvento.Id = id;
             var evento = _eventoRepository.GetById(editEvento.Id);
             if(evento == null)
                 return NotFound(new { message = $"Evento com o id {entity.Id} não foi encontrado." });
