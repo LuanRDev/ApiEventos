@@ -13,20 +13,12 @@ variables:
   value: '**/Dockerfile'
 
 - ${{if eq( variables['Build.SourceBranchName'], 'main' ) }}:
-  - name: Supabase.UrlStorage
-    value: $(UrlStorage)
-  - name: Supabase.UrlBase
-    value: $(UrlBase)
-  - name: Supabase.ApiKey
-    value: $(ApiKey)
-  - name: Supabase.AnonToken
-    value: $(AnonToken)
-  - name: Supabase.PublicObjectsBaseUrl
-    value: $(PublicObjectsBaseUrl)
   - name: ConnectionStrings.DefaultConnectionString
     value: $(LPDBConnectionString)
   - name: ApiStorageManager.BaseUrl
     value: $(ApiStorageManagerBaseAddress)
+  - name: ApiStorageManager.PublicObjectsBaseUrl
+    value: $(PublicObjectsBaseUrl)
   - name: ElasticConfiguration.Uri
     value: $(ElasticUri)
   - name: ElasticConfiguration.Username
@@ -37,18 +29,12 @@ variables:
     value: $(ElasticDefaultIndex) 
 
 - ${{if eq( variables['Build.SourceBranchName'], 'dev' ) }}:
-  - name: Supabase.UrlStorage
-    value: $(UrlStorage)
-  - name: Supabase.UrlBase
-    value: $(UrlBase)
-  - name: Supabase.ApiKey
-    value: $(ApiKey)
-  - name: Supabase.AnonToken
-    value: $(AnonToken)
   - name: ConnectionStrings.DefaultConnectionString
     value: $(LPDBConnectionString)
   - name: ApiStorageManager.BaseUrl
     value: $(ApiStorageManagerBaseAddress)
+  - name: ApiStorageManager.PublicObjectsBaseUrl
+    value: $(PublicObjectsBaseUrl)
   - name: ElasticConfiguration.Uri
     value: $(ElasticUri)
   - name: ElasticConfiguration.Username
