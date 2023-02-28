@@ -22,23 +22,23 @@ namespace ApiEventos.Domain.Models
             foreach (string base64File in Base64Files)
             {
                 StorageFile storageFile = ProcessFile(base64File, empresa, codigoEvento);
-                var payload = JsonConvert.SerializeObject(new
+                var payload = new
                 {
-                    Id = storageFile.GuidStorageId,
-                    storageFile.Name,
-                    Empresa = empresa,
-                    CodigoEvento = codigoEvento,
-                    storageFile.Url,
-                    storageFile.Metadata,
-                    storageFile.Type,
-                    storageFile.Extension,
-                    storageFile.Bytes
-                });
+                    id = storageFile.GuidStorageId,
+                    name = storageFile.Name,
+                    empresa = empresa,
+                    codigoEvento = codigoEvento,
+                    url = storageFile.Url,
+                    metadata = storageFile.Metadata,
+                    type = storageFile.Type,
+                    extension = storageFile.Extension,
+                    bytes = storageFile.Bytes
+                };
                 using (var client = new HttpClient())
                 {
                     client.BaseAddress = new Uri(_configuration["ApiStorageManager:BaseUrl"]!);
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    var response = await client.PostAsJsonAsync($"{_configuration["ApiStorageManager:UploadEndpoint"]}", payload);
+                    var response = await client.PostAsJsonAsync("/file", payload);
                     if (response.IsSuccessStatusCode)
                     {
                         var details = await response.Content.ReadAsStringAsync();
