@@ -22,7 +22,7 @@ namespace ApiEventos.Infra.Repositories
                 {
                     foreach (var arquivo in query.FirstOrDefault().ConteudoEventos)
                     {
-                        arquivo.Url = _configuration["ApiStorageManager:PublicObjectsBaseUrl"] + arquivo.Url;
+                        arquivo.Url = $"{_configuration["ApiStorageManager:PublicObjectsBaseUrl"]}/{arquivo.Url}";
                     }
                 }
                 return query.FirstOrDefault();
@@ -39,7 +39,7 @@ namespace ApiEventos.Infra.Repositories
                 {
                     foreach (var arquivo in query.FirstOrDefault().ConteudoEventos)
                     {
-                        arquivo.Url = _configuration["ApiStorageManager:PublicObjectsBaseUrl"] + arquivo.Url;
+                        arquivo.Url = $"{_configuration["ApiStorageManager:PublicObjectsBaseUrl"]}/{arquivo.Url}";
                     }
                 }
                 return query.FirstOrDefault();
@@ -58,7 +58,7 @@ namespace ApiEventos.Infra.Repositories
                     {
                         foreach (var arquivo in evento.ConteudoEventos)
                         {
-                            arquivo.Url = _configuration["ApiStorageManager:PublicObjectsBaseUrl"] + arquivo.Url;
+                            arquivo.Url = $"{_configuration["ApiStorageManager:PublicObjectsBaseUrl"]}/{arquivo.Url}";
                         }
                     }
                 }
@@ -79,7 +79,7 @@ namespace ApiEventos.Infra.Repositories
                     {
                         foreach (var arquivo in evento.ConteudoEventos)
                         {
-                            arquivo.Url = _configuration["ApiStorageManager:PublicObjectsBaseUrl"] + arquivo.Url;
+                            arquivo.Url = $"{_configuration["ApiStorageManager:PublicObjectsBaseUrl"]}/{arquivo.Url}";
                         }
                     }
                 }
@@ -101,7 +101,7 @@ namespace ApiEventos.Infra.Repositories
                         {
                             foreach (var arquivo in evento.ConteudoEventos)
                             {
-                                arquivo.Url = _configuration["ApiStorageManager:PublicObjectsBaseUrl"] + arquivo.Url;
+                                arquivo.Url = $"{_configuration["ApiStorageManager:PublicObjectsBaseUrl"]}/{arquivo.Url}";
                             }
                         }
                     }
@@ -121,7 +121,7 @@ namespace ApiEventos.Infra.Repositories
                         {
                             foreach (var arquivo in evento.ConteudoEventos)
                             {
-                                arquivo.Url = _configuration["ApiStorageManager:PublicObjectsBaseUrl"] + arquivo.Url;
+                                arquivo.Url = $"{_configuration["ApiStorageManager:PublicObjectsBaseUrl"]}/{arquivo.Url}";
                             }
                         }
                     }
@@ -141,7 +141,7 @@ namespace ApiEventos.Infra.Repositories
                         {
                             foreach (var arquivo in evento.ConteudoEventos)
                             {
-                                arquivo.Url = _configuration["ApiStorageManager:PublicObjectsBaseUrl"] + arquivo.Url;
+                                arquivo.Url = $"{_configuration["ApiStorageManager:PublicObjectsBaseUrl"]}/{arquivo.Url}";
                             }
                         }
                     }
