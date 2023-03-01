@@ -22,36 +22,42 @@ namespace ApiEventos.Domain.Models
             foreach (string base64File in Base64Files)
             {
                 StorageFile storageFile = ProcessFile(base64File, empresa, codigoEvento);
-                var payload = new
+                SendFile(storageFile, empresa, codigoEvento);
+                DatabaseFile databaseFile = new DatabaseFile(storageFile.CodigoEvento, storageFile.Name, storageFile.Url);
+                await _databaseFileRepository.Save(databaseFile);
+            }
+        }
+
+        private void SendFile(StorageFile storageFile, string empresa, int codigoEvento)
+        {
+            var payload = new
+            {
+                id = storageFile.GuidStorageId,
+                name = storageFile.Name,
+                empresa = empresa,
+                codigoEvento = codigoEvento,
+                url = storageFile.Url,
+                metadata = storageFile.Metadata,
+                type = storageFile.Type,
+                extension = storageFile.Extension,
+                bytes = storageFile.Bytes
+            };
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_configuration["ApiStorageManager:BaseUrl"]!);
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                var response = client.PostAsJsonAsync("/file", payload).Result;
+                if (response.IsSuccessStatusCode)
                 {
-                    id = storageFile.GuidStorageId,
-                    name = storageFile.Name,
-                    empresa = empresa,
-                    codigoEvento = codigoEvento,
-                    url = storageFile.Url,
-                    metadata = storageFile.Metadata,
-                    type = storageFile.Type,
-                    extension = storageFile.Extension,
-                    bytes = storageFile.Bytes
-                };
-                using (var client = new HttpClient())
+                    var details = response.Content.ReadAsStringAsync().Result;
+                    Console.WriteLine("Completed successfuly!" + details);
+                    DatabaseFile databaseFile = new DatabaseFile(storageFile.CodigoEvento, storageFile.Name, storageFile.Url);
+                }
+                else
                 {
-                    client.BaseAddress = new Uri(_configuration["ApiStorageManager:BaseUrl"]!);
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    var response = await client.PostAsJsonAsync("/file", payload);
-                    if (response.IsSuccessStatusCode)
-                    {
-                        var details = await response.Content.ReadAsStringAsync();
-                        Console.WriteLine("Completed successfuly!" + details);
-                        DatabaseFile databaseFile = new DatabaseFile(storageFile.CodigoEvento, storageFile.Name, storageFile.Url);
-                        await _databaseFileRepository.Save(databaseFile);
-                    }
-                    else
-                    {
-                        Console.WriteLine("ERROR WHILE TRYING TO SEND REQUEST");
-                        Console.WriteLine("RESPONSE GIVEN FROM HOST: " + await response.Content.ReadAsStringAsync());
-                        //throw new Exception(await response.Content.ReadAsStringAsync());
-                    }
+                    Console.WriteLine("ERROR WHILE TRYING TO SEND REQUEST");
+                    Console.WriteLine("RESPONSE GIVEN FROM HOST: " + response.Content.ReadAsStringAsync().Result);
+                    //throw new Exception(await response.Content.ReadAsStringAsync());
                 }
             }
         }
