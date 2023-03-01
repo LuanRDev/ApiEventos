@@ -42,12 +42,14 @@ namespace ApiEventos.Domain.Models
                     if (response.IsSuccessStatusCode)
                     {
                         var details = await response.Content.ReadAsStringAsync();
+                        Console.WriteLine("Completed successfuly!" + details);
                         DatabaseFile databaseFile = new DatabaseFile(storageFile.CodigoEvento, storageFile.Name, storageFile.Url);
                         await _databaseFileRepository.Save(databaseFile);
                     }
                     else
                     {
-                        throw new Exception(await response.Content.ReadAsStringAsync());
+                        Console.WriteLine("ERROR WHILE TRYING TO SEND REQUEST");
+                        //throw new Exception(await response.Content.ReadAsStringAsync());
                     }
                 }
             }
