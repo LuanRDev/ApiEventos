@@ -49,6 +49,7 @@ namespace ApiEventos.Domain.Models
                     else
                     {
                         Console.WriteLine("ERROR WHILE TRYING TO SEND REQUEST");
+                        Console.WriteLine("RESPONSE GIVEN FROM HOST: " + await response.Content.ReadAsStringAsync());
                         //throw new Exception(await response.Content.ReadAsStringAsync());
                     }
                 }
