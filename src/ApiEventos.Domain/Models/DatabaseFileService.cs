@@ -1,5 +1,6 @@
 ﻿using ApiEventos.Domain.Interfaces;
 using Microsoft.Extensions.Configuration;
+using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 
@@ -45,7 +46,7 @@ namespace ApiEventos.Domain.Models
                 client.BaseAddress = new Uri(_configuration["ApiStorageManager:BaseUrl"]!);
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 var response = client.PostAsJsonAsync("/file", payload).Result;
-                if (response.IsSuccessStatusCode)
+                if (response.StatusCode == HttpStatusCode.NoContent)
                 {
                     var details = response.Content.ReadAsStringAsync().Result;
                     DatabaseFile databaseFile = new DatabaseFile(storageFile.CodigoEvento, storageFile.Name, storageFile.Url);
