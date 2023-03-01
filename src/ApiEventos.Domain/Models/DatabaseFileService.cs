@@ -1,9 +1,7 @@
 ﻿using ApiEventos.Domain.Interfaces;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Text;
 
 namespace ApiEventos.Domain.Models
 {
@@ -34,8 +32,8 @@ namespace ApiEventos.Domain.Models
             {
                 id = storageFile.GuidStorageId,
                 name = storageFile.Name,
-                empresa = empresa,
-                codigoEvento = codigoEvento,
+                empresa,
+                codigoEvento,
                 url = storageFile.Url,
                 metadata = storageFile.Metadata,
                 type = storageFile.Type,
@@ -50,14 +48,11 @@ namespace ApiEventos.Domain.Models
                 if (response.IsSuccessStatusCode)
                 {
                     var details = response.Content.ReadAsStringAsync().Result;
-                    Console.WriteLine("Completed successfuly!" + details);
                     DatabaseFile databaseFile = new DatabaseFile(storageFile.CodigoEvento, storageFile.Name, storageFile.Url);
                 }
                 else
                 {
-                    Console.WriteLine("ERROR WHILE TRYING TO SEND REQUEST");
-                    Console.WriteLine("RESPONSE GIVEN FROM HOST: " + response.Content.ReadAsStringAsync().Result);
-                    //throw new Exception(await response.Content.ReadAsStringAsync());
+                    throw new Exception(response.Content.ReadAsStringAsync().Result);
                 }
             }
         }
