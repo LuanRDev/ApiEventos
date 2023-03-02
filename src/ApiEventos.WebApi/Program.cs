@@ -3,6 +3,9 @@ using ApiEventos.WebApi.Middlewares;
 using System.Text.Json.Serialization;
 using Serilog;
 using ApiEventos.WebApi.Logging;
+using ApiEventos.WebApi.Auth;
+using Microsoft.AspNetCore.Authorization;
+using Elastic.CommonSchema;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.AddSerilog(builder.Configuration, "API Eventos");
@@ -36,6 +39,10 @@ builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.Re
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddAuthorization();
+builder.Services.AddSingleton(typeof(IAuthorizationPolicyProvider), typeof(AuthorizationPolicyProvider));
+builder.Services.AddSingleton(typeof(IAuthorizationHandler), typeof(HasScopeHandler));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -49,6 +56,8 @@ app.UseMiddleware<ExceptionMiddleware>();
 app.UseCors("CorsPolicy");
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
