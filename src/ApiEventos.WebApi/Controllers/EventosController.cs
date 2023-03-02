@@ -3,6 +3,7 @@ using ApiEventos.Domain.Models;
 using ApiEventos.Infra.Repositories;
 using ApiEventos.WebApi.DTOs;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiEventos.WebApi.Controllers
@@ -38,6 +39,7 @@ namespace ApiEventos.WebApi.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize("BuscarEvento")]
         public async Task<ActionResult<Evento>> GetEvento(int id)
         {
             var evento = _eventoRepository.GetById(id);
@@ -49,6 +51,7 @@ namespace ApiEventos.WebApi.Controllers
         }
 
         [HttpGet()]
+        [Authorize("BuscarEventos")]
         public async Task<ActionResult<IEnumerable<Evento>>> GetEventos(int limit)
         {
             if(limit > 0)
@@ -61,6 +64,7 @@ namespace ApiEventos.WebApi.Controllers
         }
 
         [HttpPost()]
+        [Authorize("AdicionarEvento")]
         public async Task<ActionResult> NewEvento([FromBody]EventoDTO newEvento)
         { 
             await _eventoService.Save(
@@ -78,6 +82,7 @@ namespace ApiEventos.WebApi.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize("EditarEvento")]
         public async Task<ActionResult> EditEvento([FromBody] EventoDTO editEvento, int id)
         {
             var mapper = InitializeAutomapper();
@@ -102,6 +107,7 @@ namespace ApiEventos.WebApi.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize("ExcluirEvento")]
         public async Task<ActionResult> DeleteEvento(int id)
         {
             var evento = _eventoRepository.GetById(id);
@@ -113,6 +119,7 @@ namespace ApiEventos.WebApi.Controllers
         }
 
         [HttpGet("tipos")]
+        [Authorize("BuscarTipos")]
         public async Task<ActionResult<IEnumerable<TipoEvento>>> GetTipos()
         {
             var tipos = _tiposEventoRepository.GetAll();
@@ -120,6 +127,7 @@ namespace ApiEventos.WebApi.Controllers
         }
 
         [HttpGet("reports")]
+        [Authorize("ObterReports")]
         public async Task<ActionResult<object>> GetReports()
         {
             DateTime lastWeekDate = DateTime.Today.AddDays(-7);
