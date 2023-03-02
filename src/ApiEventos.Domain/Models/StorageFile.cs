@@ -24,7 +24,7 @@ namespace ApiEventos.Domain.Models
             Type = type;
             Extension = extension;
             Bytes = bytes;
-            Url = $"eventos/empresas/{Empresa}/{CodigoEvento}/documentos/{GuidStorageId}.{Extension}";
+            Url = $"empresas/{Empresa}/{CodigoEvento}/documentos/{GuidStorageId}.{Extension}";
         }
         private void ValidaStorageFile(int codigoEvento, string empresa, string name, string metadata, string type, string extensions, byte[] bytes)
         {
