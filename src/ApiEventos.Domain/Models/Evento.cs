@@ -1,16 +1,28 @@
-﻿namespace ApiEventos.Domain.Models
+﻿using Newtonsoft.Json;
+
+namespace ApiEventos.Domain.Models
 {
     public class Evento : BaseEntity
     {
+        [JsonProperty("tipoEvento")]
         public int? TipoEvento { get; set; }
+        [JsonProperty("descricao")]
         public string? Descricao { get; private set; }
+        [JsonProperty("empresa")]
         public string? Empresa { get; private set; }
+        [JsonProperty("instrutor")]
         public string? Instrutor { get; private set; }
+        [JsonProperty("dataRealizado")]
         public DateTime? DataRealizado { get; private set; }
+        [JsonProperty("cargaHoraria")]
         public float? CargaHoraria { get; private set; }
+        [JsonProperty("participantesEsperados")]
         public int? ParticipantesEsperados { get; private set; }
+        [JsonProperty("participacoesConfirmadas")]
         public int? ParticipacoesConfirmadas { get; private set; }
+        [JsonProperty("inativo")]
         public bool? Inativo { get; private set; }
+        [JsonProperty("conteudoEventos")]
         public virtual ICollection<DatabaseFile> ConteudoEventos { get; set; } = new List<DatabaseFile>();
 
         public Evento() { }
