@@ -24,6 +24,12 @@ builder.Host.ConfigureAppConfiguration(app => app.AddConfiguration(
 
 builder.Services.AddElasticsearch(builder.Configuration);
 
+builder.Services.AddStackExchangeRedisCache(o =>
+{
+    o.InstanceName = "instance";
+    o.Configuration = builder.Configuration["ApiEventosCacheUrl"];
+});
+
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 AppContext.SetSwitch("Npgsql.DisableDateTimeInfinityConversions", true);
 // Add services to the container.

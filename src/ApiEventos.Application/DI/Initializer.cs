@@ -1,5 +1,6 @@
 ﻿using ApiEventos.Domain.Interfaces;
 using ApiEventos.Domain.Models;
+using ApiEventos.Infra.Caching;
 using ApiEventos.Infra.Context;
 using ApiEventos.Infra.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +20,7 @@ namespace ApiEventos.Application.DI
             services.AddScoped(typeof(EventoRepository));
             services.AddScoped(typeof(DatabaseFileService));
             services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
+            services.AddScoped(typeof(ICachingService), typeof(CachingService));
         }
     }
 }
