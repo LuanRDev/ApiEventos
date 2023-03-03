@@ -32,6 +32,12 @@ variables:
     value: $(KeycloakUrlBase) 
   - name: Keycloak.Authority
     value: $(KeycloakAuthority)
+  - name: Keycloak.SessionStartUrl
+    value: $(KeycloakSessionStartUrl)
+  - name: Keycloak.ApiStorageManagerClientId
+    value: $(ApiStorageManagerClientId)
+  - name: Keycloak.ApiStorageManagerClientSecret
+    value: $(ApiStorageManagerClientSecret)
 
 - ${{if eq( variables['Build.SourceBranchName'], 'dev' ) }}:
   - name: ConnectionStrings.DefaultConnectionString
@@ -52,6 +58,12 @@ variables:
     value: $(KeycloakUrlBase) 
   - name: Keycloak.Authority
     value: $(KeycloakAuthority)
+  - name: Keycloak.SessionStartUrl
+    value: $(KeycloakSessionStartUrl)
+  - name: Keycloak.ApiStorageManagerClientId
+    value: $(ApiStorageManagerClientId)
+  - name: Keycloak.ApiStorageManagerClientSecret
+    value: $(ApiStorageManagerClientSecret)
 
 jobs:
 - job: Build
