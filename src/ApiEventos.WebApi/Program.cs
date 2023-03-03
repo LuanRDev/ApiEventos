@@ -6,6 +6,8 @@ using ApiEventos.WebApi.Logging;
 using ApiEventos.WebApi.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.AddSerilog(builder.Configuration, "API Eventos");
@@ -64,6 +66,27 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(jwtBearerOptions =>
+{
+    jwtBearerOptions.Authority = builder.Configuration["Keycloak:UrlBase"] + builder.Configuration["Keycloak:Authority"];
+    jwtBearerOptions.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidIssuer = builder.Configuration["Keycloak:UrlBase"] + builder.Configuration["Keycloak:Authority"],
+        ValidAudience = "account",
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true
+    };
+});
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("ApiEventos", policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        policy.RequireClaim("clientId", "ApiEventos");
+    });
+});
 builder.Services.AddAuthorization();
 builder.Services.AddSingleton(typeof(IAuthorizationPolicyProvider), typeof(AuthorizationPolicyProvider));
 builder.Services.AddSingleton(typeof(IAuthorizationHandler), typeof(HasScopeHandler));
