@@ -9,6 +9,7 @@ variables:
 - group: ConnectionStringsVariables
 - group: ElasticSearchVariables
 - group: APIsUrlsVariables
+- group: KeycloakVariables
 - name: dockerfilePath
   value: '**/Dockerfile'
 
@@ -32,7 +33,11 @@ variables:
   - name: ElasticConfiguration.Password
     value: $(ElasticPassword)    
   - name: ElasticConfiguration.DefaultIndex
-    value: $(ElasticDefaultIndex)  
+    value: $(ElasticDefaultIndex) 
+  - name: Keycloak.UrlBase
+    value: $(KeycloakUrlBase) 
+  - name: Keycloak.Authority
+    value: $(KeycloakAuthority) 
 
 - ${{if eq( variables['Build.SourceBranchName'], 'dev' ) }}:
   - name: Supabase.UrlStorage
@@ -54,7 +59,11 @@ variables:
   - name: ElasticConfiguration.Password
     value: $(ElasticPassword)    
   - name: ElasticConfiguration.DefaultIndex
-    value: $(ElasticDefaultIndex) 
+    value: $(ElasticDefaultIndex)
+  - name: Keycloak.UrlBase
+    value: $(KeycloakUrlBase) 
+  - name: Keycloak.Authority
+    value: $(KeycloakAuthority)
 
 jobs:
 - job: Build
