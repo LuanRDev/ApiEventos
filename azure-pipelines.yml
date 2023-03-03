@@ -9,6 +9,7 @@ variables:
 - group: ConnectionStringsVariables
 - group: APIsUrlsVariables
 - group: ElasticSearchVariables
+- group: KeycloakVariables
 - name: dockerfilePath
   value: '**/Dockerfile'
 
@@ -27,6 +28,10 @@ variables:
     value: $(ElasticPassword)    
   - name: ElasticConfiguration.DefaultIndex
     value: $(ElasticDefaultIndex) 
+  - name: Keycloak.UrlBase
+    value: $(KeycloakUrlBase) 
+  - name: Keycloak.Authority
+    value: $(KeycloakAuthority)
 
 - ${{if eq( variables['Build.SourceBranchName'], 'dev' ) }}:
   - name: ConnectionStrings.DefaultConnectionString
@@ -43,6 +48,10 @@ variables:
     value: $(ElasticPassword)    
   - name: ElasticConfiguration.DefaultIndex
     value: $(ElasticDefaultIndex)
+  - name: Keycloak.UrlBase
+    value: $(KeycloakUrlBase) 
+  - name: Keycloak.Authority
+    value: $(KeycloakAuthority)
 
 jobs:
 - job: Build
