@@ -1,5 +1,6 @@
 ﻿using ApiEventos.Domain.Interfaces;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -45,6 +46,7 @@ namespace ApiEventos.Domain.Models
             {
                 client.BaseAddress = new Uri(_configuration["ApiStorageManager:BaseUrl"]!);
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", GetToken());
                 var response = client.PostAsJsonAsync("/file", payload).Result;
                 if (response.StatusCode == HttpStatusCode.NoContent)
                 {
@@ -73,6 +75,25 @@ namespace ApiEventos.Domain.Models
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
+            }
+        }
+
+        public string GetToken()
+        {
+            using (var client = new HttpClient())
+            {
+                var payload = new
+                {
+                    grant_type = "client_credentials",
+                    client_id = _configuration["Keycloak:ApiStorageManagerClientId"],
+                    client_secret = _configuration["Keycloak:ApiStorageManagerClientSecret"]
+                };
+                client.BaseAddress = new Uri(_configuration["Keycloak:UrlBase"]!);
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                var result = client.PostAsJsonAsync(_configuration["Keycloak:SessionStartUrl"], payload).Result;
+                var resultObject = result.Content.ReadAsStringAsync().Result;
+                return JsonConvert.DeserializeObject<KeycloakTokenObject>(resultObject)!.access_token;
             }
         }
     }
