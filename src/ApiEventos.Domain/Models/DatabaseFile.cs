@@ -1,10 +1,16 @@
-﻿namespace ApiEventos.Domain.Models
+﻿using Newtonsoft.Json;
+
+namespace ApiEventos.Domain.Models
 {
     public class DatabaseFile : BaseEntity
     {
+        [JsonIgnore]
         public int CodigoEvento { get; set; }
+        [JsonProperty("name")]
         public string Name { get; set; }
+        [JsonProperty("url")]
         public string Url { get; set; }
+        [JsonIgnore]
         public virtual Evento? CodigoEventoNavigation { get; set; }
 
         public DatabaseFile() { }
