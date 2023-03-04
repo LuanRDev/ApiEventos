@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.AddSerilog(builder.Configuration, "API Eventos");
@@ -27,7 +28,12 @@ builder.Services.AddElasticsearch(builder.Configuration);
 builder.Services.AddStackExchangeRedisCache(o =>
 {
     o.InstanceName = "instance";
-    o.Configuration = builder.Configuration["ApiEventosCacheUrl"];
+    o.ConfigurationOptions = new ConfigurationOptions()
+    {
+        EndPoints = { builder.Configuration["ApiEventosCache:Url"] },
+        Password = builder.Configuration["ApiEventosCache:Password"],
+        Ssl = false,
+    };
 });
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);

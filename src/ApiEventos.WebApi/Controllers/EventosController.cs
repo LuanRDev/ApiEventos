@@ -1,10 +1,12 @@
 ﻿using ApiEventos.Domain.Interfaces;
 using ApiEventos.Domain.Models;
+using ApiEventos.Infra.Caching;
 using ApiEventos.Infra.Repositories;
 using ApiEventos.WebApi.DTOs;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace ApiEventos.WebApi.Controllers
 {
@@ -15,17 +17,20 @@ namespace ApiEventos.WebApi.Controllers
         private readonly DatabaseFileService _databaseFileService;
         private readonly IRepository<TipoEvento> _tiposEventoRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ICachingService _cache;
         public EventosController(EventoRepository eventoRepository, 
             EventoService eventoService, 
             DatabaseFileService databaseFileService,
             IRepository<TipoEvento> tiposEventoRepository, 
-            IUnitOfWork unitOfWork) 
+            IUnitOfWork unitOfWork,
+            ICachingService cache) 
         {
             _eventoService = eventoService;
             _databaseFileService = databaseFileService;
             _eventoRepository = eventoRepository;
             _tiposEventoRepository = tiposEventoRepository;
             _unitOfWork = unitOfWork;
+            _cache = cache;
         }
 
         static Mapper InitializeAutomapper()
@@ -42,12 +47,18 @@ namespace ApiEventos.WebApi.Controllers
         [Authorize("BuscarEvento")]
         public async Task<ActionResult<Evento>> GetEvento(int id)
         {
-            var evento = _eventoRepository.GetById(id);
-            if(evento == null)
+            var cachedEvento = await _cache.GetAsync(id.ToString());
+            if(cachedEvento == null)
             {
-                return NotFound(new { message = $"Evento com o id {id} não foi encontrado." });
+                var evento = _eventoRepository.GetById(id);
+                if (evento == null)
+                {
+                    return NotFound(new { message = $"Evento com o id {id} não foi encontrado." });
+                }
+                await _cache.SetAsync(id.ToString(), JsonConvert.SerializeObject(evento));
+                return Ok(evento);
             }
-            return Ok(evento);
+            return Ok(cachedEvento);
         }
 
         [HttpGet()]
