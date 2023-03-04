@@ -82,18 +82,24 @@ namespace ApiEventos.Domain.Models
         {
             using (var client = new HttpClient())
             {
-                var payload = new
+                var body = new FormUrlEncodedContent(new[]
                 {
-                    grant_type = "client_credentials",
-                    client_id = _configuration["Keycloak:ApiStorageManagerClientId"],
-                    client_secret = _configuration["Keycloak:ApiStorageManagerClientSecret"]
-                };
+                    new KeyValuePair<string, string>("grant_type", "client_credentials"),
+                    new KeyValuePair<string, string>("client_id", _configuration["Keycloak:ApiStorageManagerClientId"]!),
+                    new KeyValuePair<string, string>("client_secret", _configuration["Keycloak:ApiStorageManagerClientSecret"]!)
+                });
+
                 client.BaseAddress = new Uri(_configuration["Keycloak:UrlBase"]!);
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                var result = client.PostAsJsonAsync(_configuration["Keycloak:SessionStartUrl"], payload).Result;
+
+                var result = client.PostAsync(_configuration["Keycloak:SessionStartUrl"], body).Result;
                 var resultObject = result.Content.ReadAsStringAsync().Result;
-                return JsonConvert.DeserializeObject<KeycloakTokenObject>(resultObject)!.access_token;
+                if (result.IsSuccessStatusCode) 
+                {
+                    return JsonConvert.DeserializeObject<KeycloakTokenObject>(resultObject)!.access_token;
+                }
+                throw new Exception(resultObject);
             }
         }
     }
