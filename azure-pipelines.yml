@@ -38,8 +38,10 @@ variables:
     value: $(ApiStorageManagerClientId)
   - name: Keycloak.ApiStorageManagerClientSecret
     value: $(ApiStorageManagerClientSecret)
-  - name: ApiEventosCacheUrl
-    value: $(ApiEventosCacheUrl)
+  - name: ApiEventosCache.Url
+    value: $(CacheApiEventos)
+  - name: ApiEventosCache.Password
+    value: $(CacheApiEventosPassword)
 
 - ${{if eq( variables['Build.SourceBranchName'], 'dev' ) }}:
   - name: ConnectionStrings.DefaultConnectionString
@@ -68,6 +70,10 @@ variables:
     value: $(ApiStorageManagerClientSecret)
   - name: ApiEventosCacheUrl
     value: $(ApiEventosCacheUrl)
+  - name: ApiEventosCache.Url
+    value: $(CacheApiEventos)
+  - name: ApiEventosCache.Password
+    value: $(CacheApiEventosPassword)
 
 jobs:
 - job: Build
