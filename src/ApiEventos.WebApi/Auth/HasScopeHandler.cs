@@ -6,7 +6,7 @@ namespace ApiEventos.WebApi.Auth
     {
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, HasScopeRequirement scopeRequirements)
         {
-            if (!context.User.HasClaim(c => c.Type == "resourse_access"))
+            if (!context.User.HasClaim(c => c.Type == "resource_access"))
             {
                 return Task.CompletedTask;
             }
