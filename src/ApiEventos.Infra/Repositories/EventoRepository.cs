@@ -177,5 +177,15 @@ namespace ApiEventos.Infra.Repositories
             }
             return new List<int?>();
         }
+
+        public string GetEventoHash(int eventoId)
+        {
+            var query = _context.Set<Evento>().Where(e => e.Id == eventoId).Where(e => e.Inativo == false).Select(e => e.EventoHash);
+            if (query.Any())
+            {
+                return query.FirstOrDefault();
+            }
+            return null;
+        }
     }
 }
