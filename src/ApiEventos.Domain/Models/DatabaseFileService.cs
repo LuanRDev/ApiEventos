@@ -45,6 +45,7 @@ namespace ApiEventos.Domain.Models
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri(_configuration["ApiStorageManager:BaseUrl"]!);
+                client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", GetToken());
                 var response = client.PostAsJsonAsync("/file", payload).Result;
