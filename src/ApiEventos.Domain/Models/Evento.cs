@@ -4,6 +4,8 @@ namespace ApiEventos.Domain.Models
 {
     public class Evento : BaseEntity
     {
+        [JsonProperty("eventoHash")]
+        public string? EventoHash { get; set; }
         [JsonProperty("tipoEvento")]
         public int? TipoEvento { get; set; }
         [JsonProperty("descricao")]
@@ -30,6 +32,7 @@ namespace ApiEventos.Domain.Models
         public Evento(int? tipoEvento, string? descricao, string? empresa, string? instrutor, DateTime? dataRealizado, float? cargaHoraria, int? participantesEsperados, int? participacoesConfirmadas, bool? inativo)
         {
             ValidaEvento(tipoEvento, descricao, empresa, instrutor, dataRealizado, cargaHoraria, participantesEsperados, participacoesConfirmadas, inativo);
+            EventoHash = Guid.NewGuid().ToString().Remove(6);    
             TipoEvento = tipoEvento;
             Descricao = descricao;
             Empresa = empresa;

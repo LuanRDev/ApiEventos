@@ -18,6 +18,7 @@ namespace ApiEventos.Infra.Context
                 entity.ToTable("eventos");
 
                 entity.Property(e => e.Id).HasColumnName("codigo_evento");
+                entity.Property(e => e.EventoHash).HasColumnName("hash_evento");
                 entity.Property(e => e.CargaHoraria).HasColumnName("carga_horaria");
                 entity.Property(e => e.DataRealizado).HasColumnName("data_realizado");
                 entity.Property(e => e.Descricao).HasColumnName("descricao");
