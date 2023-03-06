@@ -61,6 +61,28 @@ namespace ApiEventos.WebApi.Controllers
             return Ok(cachedEvento);
         }
 
+        [HttpGet("public/{id}")]
+        public async Task<ActionResult<Evento>> GetEvento(int id, string hashCode)
+        {
+            var eventoHash = _eventoRepository.GetEventoHash(id);
+            if (eventoHash != hashCode)
+            {
+                return BadRequest(new { message = "O Hash informado está incorreto." });
+            }
+            var cachedEvento = await _cache.GetAsync(id.ToString());
+            if (cachedEvento == null)
+            {
+                var evento = _eventoRepository.GetById(id);
+                if (evento == null)
+                {
+                    return NotFound(new { message = $"Evento com o id {id} não foi encontrado." });
+                }
+                await _cache.SetAsync(id.ToString(), JsonConvert.SerializeObject(evento));
+                return Ok(evento);
+            }
+            return Ok(cachedEvento);
+        }
+
         [HttpGet()]
         [Authorize("BuscarEventos")]
         public async Task<ActionResult<IEnumerable<Evento>>> GetEventos(int limit)
@@ -75,7 +97,7 @@ namespace ApiEventos.WebApi.Controllers
         }
 
         [HttpPost()]
-        [Authorize("AdicionarEvento")]
+        //[Authorize("AdicionarEvento")]
         public async Task<ActionResult> NewEvento([FromBody]EventoDTO newEvento)
         { 
             await _eventoService.Save(
